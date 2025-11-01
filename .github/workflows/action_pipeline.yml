@@ -28,7 +28,7 @@ jobs:
           # Navega até a pasta onde o código está
           cd simple-app
           # Tenta compilar o código. Se houver erro de sintaxe, o job falha aqui.
-          python3 -m py_compile main.py
+          python3 main.py
         shell: bash
         
       # 4. Verifica se a palavra "Versão" está no código
