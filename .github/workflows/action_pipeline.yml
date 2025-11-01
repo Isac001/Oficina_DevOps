@@ -1,0 +1,54 @@
+name: Python Quality and Content Check
+
+# Aciona este workflow em Pull Requests para o branch 'main'
+on:
+  pull_request:
+    branches:
+      - main
+      
+jobs:
+  validate-code:
+    # O job será executado em uma máquina virtual Ubuntu
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Clona o código do repositório
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Python 3.10
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. Testa a sintaxe do Python (verificação de "compilação")
+      - name: Test Python Syntax (Compilation Check)
+        run: |
+          # Navega até a pasta onde o código está
+          cd simple-app
+          # Tenta compilar o código. Se houver erro de sintaxe, o job falha aqui.
+          python3 -m py_compile main.py
+        shell: bash
+        
+      # 4. Verifica se a palavra "Versão" está no código
+      - name: Check for "Versão" keyword
+        id: check_version
+        run: |
+          # Define o caminho completo do arquivo a ser verificado
+          FILE_PATH="simple-app/main.py"
+          
+          # Usa 'grep' para procurar a palavra "Versão" (ignora maiúsculas/minúsculas)
+          # A opção -q (quiet) faz o grep não imprimir nada, apenas retornar um status
+          grep -iq "Versão" $FILE_PATH
+          
+          # $? captura o código de saída do último comando (grep)
+          # 0 = sucesso (encontrou)
+          # >0 = falha (não encontrou)
+          if [ $? -eq 0 ]; then
+            echo "✅ PALAVRA 'Versão' ENCONTRADA no arquivo $FILE_PATH."
+          else
+            echo "❌ ERRO: A palavra 'Versão' não foi encontrada no arquivo $FILE_PATH. Por favor, atualize a mensagem!"
+            exit 1 # Força a falha do job, bloqueando o merge
+          fi
+        shell: bash
