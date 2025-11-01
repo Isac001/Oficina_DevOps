@@ -29,3 +29,8 @@ Isso é chamado de "Regra de Proteção de Branch":
 Quando você marcar esta última caixa, o GitHub vai pedir que você escolha quais "status checks" são obrigatórios. Assim que rodarmos nosso Action pela primeira vez, o nome dele aparecerá nessa lista para selecionarmos.
 
 Com isso, o repositório estará configurado para nosso fluxo de CI.
+
+Comandos Docker:
+
+        docker build -t oficina-devops simple_app/ || Para Buildar o Container
+        docker run --rm oficina-devops || Para Rodar o Container
